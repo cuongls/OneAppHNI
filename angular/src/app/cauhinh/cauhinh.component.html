@@ -1,0 +1,80 @@
+<form
+  class="form-horizontal"
+  autocomplete="off"
+  #createUserModal="ngForm"
+  (ngSubmit)="save()"
+>
+  <abp-modal-header
+    [title]="'Thay đổi cấu hình tham số' | localize"
+  ></abp-modal-header>
+  <div class="modal-body">
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label" for="emailgui">
+        {{ "Email gửi" | localize }}
+      </label>
+      <div class="col-md-9">
+        <input
+          type="text"
+          class="form-control"
+          name="emailgui"
+          id="emailgui"
+          required
+          maxlength="32"
+          [(ngModel)]="cauhinh.acountEmailSend"
+        />
+      </div>
+    </div>
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label" for="PassWordEmailSend">
+        {{ "Mật khẩu" | localize }}
+      </label>
+      <div class="col-md-9">
+        <input
+          type="password"
+          class="form-control"
+          name="PassWordEmailSend"
+          id="PassWordEmailSend"
+          required
+          maxlength="32"
+          [(ngModel)]="cauhinh.passWordEmailSend"
+        />
+      </div>
+    </div>
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label" for="EmailNhanCanhBaoDienNang">
+        {{ "Email nhận CB điện năng" | localize }}
+      </label>
+      <div class="col-md-9">
+        <input
+          type="text"
+          class="form-control"
+          name="EmailNhanCanhBaoDienNang"
+          id="EmailNhanCanhBaoDienNang"
+          required
+          maxlength="2000"
+          [(ngModel)]="cauhinh.emailNhanCanhBaoDienNang"
+        />
+      </div>
+    </div>
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label" for="UrlXuatPhieuDHTT">
+        {{ "Api xuất phiếu ĐHTT" | localize }}
+      </label>
+      <div class="col-md-9">
+        <input
+          type="text"
+          class="form-control"
+          name="UrlXuatPhieuDHTT"
+          id="UrlXuatPhieuDHTT"
+          required
+          maxlength="2000"
+          [(ngModel)]="cauhinh.urlXuatPhieuDHTT"
+        />
+      </div>
+    </div>
+  </div>
+  <abp-modal-footer
+    [cancelDisabled]="saving"
+    [saveDisabled]="!createUserModal.form.valid || saving"
+  ></abp-modal-footer>
+</form>

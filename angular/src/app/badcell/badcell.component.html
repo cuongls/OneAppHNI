@@ -1,0 +1,276 @@
+<div>   
+    <section class="content-header" style="border: 1px solid;">
+        <div class="container-fluid"> 
+          <div class="row" id="diennang"> 
+              <div class="col-sm-4">
+                  <h1>Danh sách Badcell</h1>
+                </div>
+          </div>
+          <div class="row" id="diennang" >                       
+              <label class="col-md-1 col-form-label" for="tuan">
+                  {{ "Tuần:" | localize }}
+              </label>
+              <div class="col-md-1">
+                  <input
+                      type="text"
+                      class="form-control"
+                      name="tuan"
+                      id="tuan"
+                      required
+                      maxlength="32"
+                      [(ngModel)]="tuan"
+                  />
+              </div>
+              <label class="col-md-1 col-form-label" for="nam">
+                {{ "Năm:" | localize }}
+            </label>
+            <div class="col-md-1">
+                <input
+                    type="text"
+                    class="form-control"
+                    name="nam"
+                    id="nam"
+                    required
+                    maxlength="32"
+                    [(ngModel)]="nam"
+                />
+            </div>
+            <label class="col-md-1 col-form-label" for="loaicell">
+              {{ "Loại Cell:" | localize }}
+              </label>
+              <div class="col-md-1">
+                  <select class="form-control" id="cell" name="loaicell" [(ngModel)]="cell">
+                    <option value="" >Tất cả</option>
+                      <option value="2G" >2G</option>
+                      <option value="3G" >3G</option>
+                      <option value="4G" >4G</option>
+                  </select>
+                  
+              </div>
+              <label class="col-md-2 col-form-label" for="loaicell">
+                {{ "Trạng thái:" | localize }}
+                </label>
+                <div class="col-md-2">
+                    <select class="form-control" id="trangthai" name="trangthai" [(ngModel)]="trangthai">
+                        <option value="0" >Chưa xuất phiếu</option>
+                        <option value="1" >Đã xuất phiếu</option>
+                    </select>
+                    
+                </div>
+            <div class="col-2 text-right">
+              <button class="btn bg-blue"
+                  (click)='getDataPage(1)'>
+                  <i class="fas fa-search"></i>
+                  Tìm kiếm
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered" >
+                <thead class="bg-light">
+                <tr>
+                    <th>STT</th>
+                    <th style="width: 310px;">{{ "Actions" | localize }}</th>
+                    <th>Mã tỉnh</th>
+                    <th>Quận/Huyện</th>
+                    <th>Tên trạm</th>
+                    <th>Tên Cell</th>
+                    
+                </tr>
+                </thead>
+                <tbody>
+                <tr
+                    *ngFor="
+                        let badCell of badCells
+                        | paginate
+                            : {
+                                id: 'server1',
+                                itemsPerPage: pageSize1,
+                                currentPage: pageNumber1,
+                                totalItems: totalItems1
+                            };let i = index
+                    "[attr.data-index]="i"
+                >
+                <td>{{ i+1 }}</td>
+                <td>
+                    <div *ngIf="badCell.trangthai==0">
+                        <button
+                            type="button"
+                            class="btn btn-sm bg-secondary"
+                            (click)="xuatphieu(badCell)"
+                    >
+                    <i class="fas fa-arrow-right"></i>
+                        {{ "XP" | localize }}
+                    </button> 
+                    </div>
+                    
+                </td>
+                    <td>{{badCell.matinh}}</td>
+                    <td>{{badCell.quanhuyen}}</td>
+                    <td>{{badCell.tentram}}</td>
+                    <td>{{badCell.tencell}}</td>
+                    
+                </tr>
+                </tbody>
+            </table>
+        </div>
+      </div>
+    <div class="card-footer table-card-footer bg-light border-top">
+        <div class="row">
+            <div class="col-sm-4 col-12 text-sm-left text-center">
+                <button class="btn btn-secondary" (click)="refresh1()">
+                    <i class="fas fa-redo-alt"></i>
+                </button>
+            </div>
+            <div class="col-sm-4 col-12 text-center">
+                <p class="mb-0 my-2">
+                    {{ "TotalRecordsCount" | localize: totalItems1 }}
+                </p>
+            </div>
+            <div class="col-sm-4 col-12">
+                <div class="float-sm-right m-auto">
+                    <abp-pagination-controls
+                            id="server1"
+                            (pageChange)="getDataPage1($event)"
+                    >
+                    </abp-pagination-controls>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="content-header" style="border: 1px solid;">
+        <div class="container-fluid"> 
+          <div class="d-flex justify-content-center" *ngIf="viewUpload">
+              <div class="spinner-border" role="status" >
+                <span class="sr-only" id="loading"></span>
+              </div>
+            </div>
+          <div class="row" id="diennang" *ngIf="!viewUpload"> 
+              <div class="col-sm-4">
+                  <h1>Upload BadCell</h1>
+                </div>
+                <div class="col-sm-8">
+                  <div class="form-group">
+                      <label for="file">Choose File</label>
+                      <input type="file"
+                             id="file"
+                             (change)="handleFileInput($event.target.files)">
+                  </div>
+                </div>
+          </div>
+          <div class="row" id="diennang" *ngIf="!viewUpload">          
+              
+              <label class="col-md-1 col-form-label" for="tuanbaocao">
+                  {{ "Tuần:" | localize }}
+              </label>
+              <div class="col-md-1">
+                  <input
+                      type="text"
+                      class="form-control"
+                      name="tuanbaocao"
+                      id="tuanbaocao"
+                      required
+                      maxlength="32"
+                      [(ngModel)]="tuanbaocao"
+                  />
+              </div>
+              <label class="col-md-1 col-form-label" for="nambaocao">
+                {{ "Năm:" | localize }}
+            </label>
+            <div class="col-md-1">
+                <input
+                    type="text"
+                    class="form-control"
+                    name="nambaocao"
+                    id="nambaocao"
+                    required
+                    maxlength="32"
+                    [(ngModel)]="nambaocao"
+                />
+            </div>
+            <label class="col-md-1 col-form-label" for="loaicell">
+              {{ "Loại Cell:" | localize }}
+              </label>
+              <div class="col-md-2">
+                  <select class="form-control" id="loaicell" name="loaicell" [(ngModel)]="loaicell">
+                      <option value="2G" >2G</option>
+                      <option value="3G" >3G</option>
+                      <option value="4G" >4G</option>
+                  </select>
+                  
+              </div>
+          
+            <div class="col-2 text-right">
+              <button [disabled]="disableUpload"  class="btn bg-blue"
+                  (click)='upload()'>
+                  <i class="fa fa-plus-square"></i>
+                  Upload
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    <div class="card-body">
+      <div class="table-responsive">
+          <table class="table table-striped table-bordered" >
+              <thead class="bg-light">
+              <tr>
+                  <th>STT</th>
+                  <th>Tên file</th>
+                    <th>Đường dẫn</th>
+                    <th>Ngày Upload</th>
+                    <th>Người Upload</th>
+                    <th>Loại File</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr
+                  *ngFor="
+                      let logUpload of logUploads
+                      | paginate
+                          : {
+                              id: 'server',
+                              itemsPerPage: pageSize,
+                              currentPage: pageNumber,
+                              totalItems: totalItems
+                          };let i = index
+                  "[attr.data-index]="i"
+              >
+              <td>{{ i+1 }}</td>
+                  <td>{{logUpload.filename}}</td>
+                  <td>{{logUpload.filepath}}</td>
+                  <td>{{logUpload.creationTime | date: 'dd/MM/yyyy HH:mm:ss'}}</td>
+                  <td>{{logUpload.iduser}}</td>
+                  <td>{{logUpload.loaifile}}</td>
+              </tr>
+              </tbody>
+          </table>
+      </div>
+    </div>
+  <div class="card-footer table-card-footer bg-light border-top">
+      <div class="row">
+          <div class="col-sm-4 col-12 text-sm-left text-center">
+              <button class="btn btn-secondary" (click)="refresh()">
+                  <i class="fas fa-redo-alt"></i>
+              </button>
+          </div>
+          <div class="col-sm-4 col-12 text-center">
+              <p class="mb-0 my-2">
+                  {{ "TotalRecordsCount" | localize: totalItems }}
+              </p>
+          </div>
+          <div class="col-sm-4 col-12">
+              <div class="float-sm-right m-auto">
+                  <abp-pagination-controls
+                          id="server"
+                          (pageChange)="getDataPage($event)"
+                  >
+                  </abp-pagination-controls>
+              </div>
+          </div>
+      </div>
+  </div>
+  </div>
